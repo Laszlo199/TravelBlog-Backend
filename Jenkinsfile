@@ -7,6 +7,10 @@ pipeline{
         stage("Build backend"){
             steps{
             echo "Building backend"
+                dir("backend-travel-blog") {
+                  sh "npm update"
+                  sh "ng run build build"
+               }
             }
         }
     }
