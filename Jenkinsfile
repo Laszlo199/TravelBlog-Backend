@@ -1,9 +1,7 @@
 pipeline{
     agent any
     triggers {
-        dir("backend-travel-blog") {
         pollSCM("H/5 * * * *")
-       }
     }
     stages{
         stage("Build backend"){
