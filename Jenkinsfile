@@ -1,7 +1,9 @@
 pipeline{
     agent any
     triggers {
+        dir("backend-travel-blog") {
         pollSCM("H/5 * * * *")
+       }
     }
     stages{
         stage("Build backend"){
@@ -9,7 +11,7 @@ pipeline{
             echo "Building backend"
                 dir("backend-travel-blog") {
                   sh "npm update"
-                  sh "ng run build build"
+                  sh "npm run build"
                }
             }
         }
