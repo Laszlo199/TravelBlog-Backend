@@ -6,12 +6,12 @@ export const PostSchema = new mongoose.Schema({
   description: String,
   text: String,
   likes: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Profile',
   },
   dislikes: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Profile',
   },
-  comments: [CommentSchema],
+  //comments: [CommentSchema],
 });

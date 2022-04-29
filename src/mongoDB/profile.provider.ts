@@ -1,7 +1,7 @@
 import { Connection } from 'mongoose';
-import { ProfileSchema } from "./profile.schema";
+import { ProfileSchema } from './profile.schema';
 
-export const profileProvider = [
+export const ProfileProvider = [
   {
     provide: 'PROFILE_MODEL',
     useFactory: (connection: Connection) => connection.model('Profile', ProfileSchema),

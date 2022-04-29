@@ -6,9 +6,7 @@ import { Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentsService {
-  constructor(
-    @Inject('COMMENT_MODEL') private readonly commentModel: Model<Comment>,
-  ) {}
+  constructor(@Inject('COMMENT_MODEL') private readonly commentModel: Model<Comment>) {}
 
   create(createCommentDto: CreateCommentDto) {
     return 'This action adds a new comment';

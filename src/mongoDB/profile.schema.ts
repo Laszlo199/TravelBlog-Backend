@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { PostSchema } from "./post.schema";
+import { PostSchema } from './post.schema';
 
 export const ProfileSchema = new mongoose.Schema({
   username: String,
