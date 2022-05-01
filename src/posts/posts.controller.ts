@@ -8,13 +8,17 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  async create(@Body() createPostDto: CreatePostDto) {
+    return await this.postsService.create(createPostDto);
   }
 
-  @Get()
-  findAll() {
-    return this.postsService.findAll();
+  /**
+   * returns a list of all posts created by the user
+   * @param id
+   */
+  @Get('userId/:id')
+  async findAll(@Param('id') id: string) {
+    return await this.postsService.findAll(id);
   }
 
   @Get(':id')

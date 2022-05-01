@@ -3,11 +3,13 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDocument } from '../mongoDB/user.schema';
 import { UserDetails } from './user.datails.interface';
+import { Profile } from '../profiles/entities/profile.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
+    @InjectModel('Profile') private readonly profileModel: Model<Profile>,
   ) {}
 
   _getUserDetails(user: UserDocument): UserDetails {
@@ -27,14 +29,19 @@ export class UserService {
     return this._getUserDetails(user);
   }
 
-  async create(
-    userName: string,
-    hashedPassword: string,
-  ): Promise<UserDocument> {
+  async create(userName: string, hashedPassword: string): Promise<Profile> {
     const newUser = new this.userModel({
       userName,
       password: hashedPassword,
     });
-    return newUser.save();
+    await newUser.save();
+
+    const newProfile = new this.profileModel({
+      userId: newUser._id,
+      username: newUser.userName,
+      ownPosts: [],
+      savedPosts: [],
+    });
+    return newProfile.save();
   }
 }

@@ -32,8 +32,7 @@ export class AuthService {
 
     const hashedPassword = await this.hashPassword(password);
 
-    const newUser = await this.userService.create(userName, hashedPassword);
-    return this.userService._getUserDetails(newUser);
+    return await this.userService.create(userName, hashedPassword);
   }
   // We have to check the hashed password and the new password, so we just compare them with the bcrypt helps
   private async doesPasswordMatch(
