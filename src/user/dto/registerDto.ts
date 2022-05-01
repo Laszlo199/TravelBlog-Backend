@@ -1,7 +1,6 @@
 import { Document } from 'mongoose';
 
 export class RegisterDto extends Document {
-  name: string;
-  email: string;
+  userName: string;
   password: string;
 }

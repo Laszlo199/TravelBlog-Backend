@@ -14,15 +14,15 @@ export class AuthService {
   ) {}
 
   // just a basic has+salt the password method.
-  async hashPassword(password: string): Promise<string> {
+  private async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 12);
   }
-  // We check the emails and if we already have the same then we don't allow the user to register.
+  // We check the userNames and if we already have the same then we don't allow the user to register.
   // Here we use the hashPassword method if the given email does not exist then we hash the password end create a user.
   async register(user: Readonly<RegisterDto>): Promise<UserDetails | any> {
-    const { name, email, password } = user;
+    const { userName, password } = user;
 
-    const existingUser = await this.userService.findByEmail(email);
+    const existingUser = await this.userService.findByUserName(userName);
 
     if (existingUser)
       throw new HttpException(
@@ -32,11 +32,11 @@ export class AuthService {
 
     const hashedPassword = await this.hashPassword(password);
 
-    const newUser = await this.userService.create(name, email, hashedPassword);
+    const newUser = await this.userService.create(userName, hashedPassword);
     return this.userService._getUserDetails(newUser);
   }
   // We have to check the hashed password and the new password, so we just compare them with the bcrypt helps
-  async doesPasswordMatch(
+  private async doesPasswordMatch(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
@@ -44,15 +44,15 @@ export class AuthService {
   }
   // we need this method in the login method
   /*
-     1. we search by email. if we didn`t find any user then lol
+     1. we search by userName. if we didn`t find any user then lol
      2. we check the passwords match.  if no then no.
      3. we return the user important without the password!
    */
-  async validateUser(
-    email: string,
+  private async validateUser(
+    userName: string,
     password: string,
   ): Promise<UserDetails | null> {
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userService.findByUserName(userName);
     const doesUserExist = !!user;
 
     if (!doesUserExist) return null;
@@ -68,8 +68,8 @@ export class AuthService {
   }
   // We return the token if the user valid !
   async login(existingUser: LoginDto): Promise<{ token: string }> {
-    const { email, password } = existingUser;
-    const user = await this.validateUser(email, password);
+    const { userName, password } = existingUser;
+    const user = await this.validateUser(userName, password);
 
     if (!user)
       throw new HttpException('Credentials invalid!', HttpStatus.UNAUTHORIZED);
