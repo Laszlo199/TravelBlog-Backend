@@ -1,6 +1,7 @@
 import { Comment } from "../../comments/entities/comment.entity";
 
 export class Post {
+  id: string;
   username: string;
   title: string;
   description: string;

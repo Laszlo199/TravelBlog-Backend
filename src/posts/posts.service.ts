@@ -53,13 +53,14 @@ export class PostsService {
     if (profile != null) {
       return profile.ownPosts.map((post) => {
         return {
+          id: post.id,
           username: profile.username,
           title: post.title,
           description: post.description,
           text: post.text,
           isPrivate: post.isPrivate,
           location: post.location,
-          date: post.date,
+          date: post.date.toLocaleDateString(),
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments,
@@ -81,13 +82,14 @@ export class PostsService {
     if (profile != null) {
       return profile.savedPosts.map((post) => {
         return {
+          id: post.id,
           username: profile.username,
           title: post.title,
           description: post.description,
           text: post.text,
           isPrivate: post.isPrivate,
           location: post.location,
-          date: post.date,
+          date: post.date.toLocaleDateString(),
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments,
