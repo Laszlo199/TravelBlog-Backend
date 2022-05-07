@@ -1,25 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { UserDocument } from '../mongoDB/user.schema';
 import { UserDetails } from './user.datails.interface';
 import { Profile } from '../profiles/entities/profile.entity';
+import { User } from './entity/User';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<UserDocument>,
-    @InjectModel('Profile') private readonly profileModel: Model<Profile>,
+    @Inject('USER_MODEL') private readonly userModel: Model<User>,
+    @Inject('PROFILE_MODEL') private readonly profileModel: Model<Profile>,
   ) {}
 
-  _getUserDetails(user: UserDocument): UserDetails {
+
+  _getUserDetails(user: User): UserDetails {
     return {
-      id: user._id,
+      id: user.id,
       userName: user.userName,
     };
   }
 
-  async findByUserName(userName: string): Promise<UserDocument | null> {
+  async findByUserName(userName: string): Promise<User | null> {
     return this.userModel.findOne({ userName }).exec();
   }
 
