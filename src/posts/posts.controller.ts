@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { LikePostDto } from "./dto/like-post.dto";
 
 @Controller('posts')
 export class PostsController {
@@ -16,9 +17,27 @@ export class PostsController {
    * returns a list of all posts created by the user
    * @param id
    */
-  @Get('userId/:id')
+  @Get('own/userId/:id')
   async findAll(@Param('id') id: string) {
     return await this.postsService.findAll(id);
+  }
+
+  /**
+   * returns a list of all posts liked by the user
+   * @param id
+   */
+  @Get('liked/userId/:id')
+  async findAllSaved(@Param('id') id: string) {
+    return await this.postsService.findAllSaved(id);
+  }
+
+  /**
+   * performs an action of user liking the post
+   * @param likePostDto
+   */
+  @Post('like')
+  async likePost(@Body() likePostDto: LikePostDto) {
+    return await this.postsService.like(likePostDto);
   }
 
   @Get(':id')
