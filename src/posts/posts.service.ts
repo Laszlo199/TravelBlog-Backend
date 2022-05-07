@@ -4,8 +4,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Model } from 'mongoose';
 import { Post } from './entities/post.entity';
 import { Profile } from '../profiles/entities/profile.entity';
-import { PostSchema } from '../mongoDB/post.schema';
-import { use } from "passport";
 
 @Injectable()
 export class PostsService {
@@ -26,6 +24,8 @@ export class PostsService {
         description: createPostDto.description,
         text: createPostDto.text,
         isPrivate: createPostDto.isPrivate,
+        location: createPostDto.location,
+        date: createPostDto.date,
         likes: [],
         dislikes: [],
         comments: [],
@@ -43,13 +43,27 @@ export class PostsService {
       );
   }
 
+  //finds all posts created by that user
   async findAll(userId: string) {
     const profile = await this.profileModel
       .findOne({ userId: userId })
       .populate('ownPosts')
       .exec();
-    if (profile != null) return profile.ownPosts;
-    else
+    if (profile != null) {
+      return profile.ownPosts.map((post) => {
+        return {
+          username: profile.username,
+          title: post.title,
+          description: post.description,
+          text: post.text,
+          isPrivate: post.isPrivate,
+          location: post.location,
+          date: post.date,
+          likes: post.likes.length,
+          dislikes: post.dislikes.length,
+          comments: post.comments,
+        }});
+    } else
       throw new HttpException(
         'No profile found with that user id',
         HttpStatus.BAD_REQUEST,

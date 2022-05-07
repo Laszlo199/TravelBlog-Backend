@@ -11,4 +11,8 @@ export class CreatePostDto {
   text: string;
   @ApiProperty()
   isPrivate: boolean;
+  @ApiProperty()
+  location: string;
+  @ApiProperty()
+  date: Date;
 }
