@@ -63,7 +63,13 @@ export class PostsService {
           date: post.date.toLocaleDateString(),
           likes: post.likes.length,
           dislikes: post.dislikes.length,
-          comments: post.comments,
+          comments: post.comments.map((comment) => {
+            return {
+              username: comment.username,
+              date: comment.date.toLocaleDateString(),
+              text: comment.text,
+            };
+          }),
         };
       });
     } else
@@ -92,7 +98,13 @@ export class PostsService {
           date: post.date.toLocaleDateString(),
           likes: post.likes.length,
           dislikes: post.dislikes.length,
-          comments: post.comments,
+          comments: post.comments.map((comment) => {
+            return {
+              username: comment.username,
+              date: comment.date.toLocaleDateString(),
+              text: comment.text,
+            };
+          }),
         };
       });
     } else
