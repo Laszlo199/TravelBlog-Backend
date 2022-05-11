@@ -5,7 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   const config = new DocumentBuilder()
-    .setTitle('Chat app')
+    .setTitle('Travel blog')
     .setDescription('The cats API description')
     .setVersion('1.0')
     .build();

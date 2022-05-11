@@ -1,6 +1,8 @@
-import { Post } from "../../posts/entities/post.entity";
+import { Post } from '../../posts/entities/post.entity';
 
 export class Profile {
+  userId: string;
   username: string;
-  posts: Post[];
+  ownPosts: Post[];
+  savedPosts: Post[];
 }

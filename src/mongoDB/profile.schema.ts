@@ -1,8 +1,18 @@
 import * as mongoose from 'mongoose';
-import { PostSchema } from './post.schema';
 
 export const ProfileSchema = new mongoose.Schema({
+  userId: String,
   username: String,
-  ownPosts: [PostSchema],
-  savedPosts: [PostSchema],
+  ownPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
+  savedPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
 });
