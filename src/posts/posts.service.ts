@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Post } from './entities/post.entity';
 import { Profile } from '../profiles/entities/profile.entity';
 import { LikePostDto } from './dto/like-post.dto';
+import { GetAllPostDto } from "./dto/getAll-post.dto";
 
 @Injectable()
 export class PostsService {
@@ -100,6 +101,9 @@ export class PostsService {
         'No profile found with that user id',
         HttpStatus.BAD_REQUEST,
       );
+  }
+  async getAllPost() {
+    return await this.postModel.find().exec();
   }
 
   //adds a post reference to user's saved posts list

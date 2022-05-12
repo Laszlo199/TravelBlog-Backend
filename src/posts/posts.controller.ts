@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { LikePostDto } from "./dto/like-post.dto";
+import { LikePostDto } from './dto/like-post.dto';
+import { GetAllPostDto } from "./dto/getAll-post.dto";
 
 @Controller('posts')
 export class PostsController {
@@ -53,5 +62,9 @@ export class PostsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
+  }
+  @Get()
+  async getAll() {
+    return await this.postsService.getAllPost();
   }
 }
