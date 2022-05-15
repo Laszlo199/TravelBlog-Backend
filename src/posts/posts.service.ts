@@ -27,6 +27,7 @@ export class PostsService {
         isPrivate: createPostDto.isPrivate,
         location: createPostDto.location,
         date: createPostDto.date,
+        photo: null,
         likes: [],
         dislikes: [],
         comments: [],
@@ -42,6 +43,13 @@ export class PostsService {
         'No profile found with that user id',
         HttpStatus.BAD_REQUEST,
       );
+  }
+
+  async addPhoto(file: Buffer, postId: string) {
+    return await this.postModel
+      .findOne({ _id: postId })
+      .updateOne({ photo: file })
+      .exec();
   }
 
   //returns all posts created by that user
@@ -61,6 +69,7 @@ export class PostsService {
           isPrivate: post.isPrivate,
           location: post.location,
           date: post.date.toLocaleDateString(),
+          photo: post.photo,
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments.map((comment) => {
@@ -96,6 +105,7 @@ export class PostsService {
           isPrivate: post.isPrivate,
           location: post.location,
           date: post.date.toLocaleDateString(),
+          photo: post.photo,
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments.map((comment) => {

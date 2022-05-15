@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete, UseInterceptors, UploadedFile
+} from "@nestjs/common";
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { LikePostDto } from "./dto/like-post.dto";
+import { LikePostDto } from './dto/like-post.dto';
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('posts')
 export class PostsController {
@@ -11,6 +20,13 @@ export class PostsController {
   @Post()
   async create(@Body() createPostDto: CreatePostDto) {
     return await this.postsService.create(createPostDto);
+  }
+
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('file/:postId')
+  async uploadFile(@Param('postId') postId: string, @UploadedFile() file: Express.Multer.File) {
+    return await this.postsService.addPhoto(file.buffer, postId);
   }
 
   /**

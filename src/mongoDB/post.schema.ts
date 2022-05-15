@@ -12,6 +12,7 @@ export const PostSchema = new mongoose.Schema({
   isPrivate: Boolean,
   location: String,
   date: Date,
+  photo: Buffer,
   likes: [
     {
       type: mongoose.Schema.Types.ObjectId,

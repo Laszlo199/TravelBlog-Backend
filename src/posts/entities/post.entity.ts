@@ -9,6 +9,7 @@ export class Post {
   isPrivate: boolean;
   location: string;
   date: Date;
+  photo: Buffer;
   likes: string[];
   dislikes: string[];
   comments: Comment[];
