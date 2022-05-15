@@ -147,7 +147,17 @@ export class PostsService {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string) {
+    const removeOwn = await this.profileModel
+      .updateOne({ ownPosts: id }, { $pull: { ownPosts: id } })
+      .exec();
+    const removeSaved = await this.profileModel
+      .updateMany({ savedPosts: id }, { $pull: { savedPosts: id } })
+      .exec();
+
+    if (removeOwn && removeSaved) {
+      const res = await this.postModel.remove({ _id: id });
+      return res.deletedCount == 1;
+    } else return false;
   }
 }
