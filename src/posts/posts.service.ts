@@ -52,25 +52,7 @@ export class PostsService {
       .exec();
     if (profile != null) {
       return profile.ownPosts.map((post) => {
-        return {
-          id: post.id,
-          username: profile.username,
-          title: post.title,
-          description: post.description,
-          text: post.text,
-          isPrivate: post.isPrivate,
-          location: post.location,
-          date: post.date.toLocaleDateString(),
-          likes: post.likes.length,
-          dislikes: post.dislikes.length,
-          comments: post.comments.map((comment) => {
-            return {
-              username: comment.username,
-              date: comment.date.toLocaleDateString(),
-              text: comment.text,
-            };
-          }),
-        };
+        return this.postConverter(post, profile);
       });
     } else
       throw new HttpException(
@@ -87,25 +69,7 @@ export class PostsService {
       .exec();
     if (profile != null) {
       return profile.savedPosts.map((post) => {
-        return {
-          id: post.id,
-          username: profile.username,
-          title: post.title,
-          description: post.description,
-          text: post.text,
-          isPrivate: post.isPrivate,
-          location: post.location,
-          date: post.date.toLocaleDateString(),
-          likes: post.likes.length,
-          dislikes: post.dislikes.length,
-          comments: post.comments.map((comment) => {
-            return {
-              username: comment.username,
-              date: comment.date.toLocaleDateString(),
-              text: comment.text,
-            };
-          }),
-        };
+        return this.postConverter(post, profile);
       });
     } else
       throw new HttpException(
@@ -139,8 +103,18 @@ export class PostsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  //returns one specific post
+  async findOne(id: string) {
+    const post = await this.postModel.findOne({ _id: id }).exec();
+    const profile = await this.profileModel.findOne({ ownPosts: id }).exec();
+
+    if (post != null && profile != null)
+      return this.postConverter(post, profile);
+    else
+      throw new HttpException(
+        'No profile or post found',
+        HttpStatus.BAD_REQUEST,
+      );
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
@@ -149,5 +123,27 @@ export class PostsService {
 
   remove(id: number) {
     return `This action removes a #${id} post`;
+  }
+
+  private postConverter(post: Post, profile: Profile) {
+    return {
+      id: post.id,
+      username: profile.username,
+      title: post.title,
+      description: post.description,
+      text: post.text,
+      isPrivate: post.isPrivate,
+      location: post.location,
+      date: post.date,
+      likes: post.likes.length,
+      dislikes: post.dislikes.length,
+      comments: post.comments.map((comment) => {
+        return {
+          username: comment.username,
+          date: comment.date,
+          text: comment.text,
+        };
+      }),
+    };
   }
 }
