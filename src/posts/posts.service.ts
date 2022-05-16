@@ -129,6 +129,7 @@ export class PostsService {
     return {
       id: post.id,
       username: profile.username,
+      userId: profile.userId,
       title: post.title,
       description: post.description,
       text: post.text,
