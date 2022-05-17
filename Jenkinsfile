@@ -4,7 +4,7 @@ pipeline{
         pollSCM("* * * * *")
     }
     tools {
-        nodeJs "18.1.0"
+        nodejs "18.1.0"
     }
     stages{
         stage("Build backend"){
