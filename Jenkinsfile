@@ -17,13 +17,13 @@ pipeline{
             }
             post {
                 always {
-                    sh "echo 'Building backend finished'"
+                    echo "Building backend finished"
                 }
                 success {
-                    sh "echo 'Building backend succeeded'"
+                    echo "Building backend succeeded"
                 }
                 failure {
-                    sh "echo 'Building backend failed'"
+                    echo "Building backend failed"
                 }
             }
         }
