@@ -27,5 +27,13 @@ pipeline{
                 }
             }
         }
+        stage("Test"){
+            steps{
+                echo "Testing backend"
+                dir("backend-travel-blog") {
+                  sh "npm run test"
+               }
+            }
+        }
     }
 }
