@@ -29,6 +29,13 @@ export class UserService {
     return this._getUserDetails(user);
   }
 
+  async getUsernameById(id:string){
+    const user = await this.userModel.findById(id).exec();
+    if (!user) return null;
+    return user.userName;
+  }
+
+
   async create(userName: string, hashedPassword: string): Promise<Profile> {
     const newUser = new this.userModel({
       userName,
