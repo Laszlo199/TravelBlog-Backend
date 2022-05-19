@@ -23,6 +23,7 @@ export class PostsService {
         profile: profile,
         title: createPostDto.title,
         description: createPostDto.description,
+        userId: createPostDto.userId,
         text: createPostDto.text,
         isPrivate: createPostDto.isPrivate,
         location: createPostDto.location,
@@ -129,7 +130,6 @@ export class PostsService {
     return {
       id: post.id,
       username: profile.username,
-      userId: profile.userId,
       title: post.title,
       description: post.description,
       text: post.text,
