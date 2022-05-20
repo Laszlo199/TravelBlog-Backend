@@ -60,13 +60,13 @@ export class PostsService {
           text: post.text,
           isPrivate: post.isPrivate,
           location: post.location,
-          date: post.date.toLocaleDateString(),
+          date: post.date,
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments.map((comment) => {
             return {
               username: comment.username,
-              date: comment.date.toLocaleDateString(),
+              date: comment.date,
               text: comment.text,
             };
           }),
@@ -95,13 +95,13 @@ export class PostsService {
           text: post.text,
           isPrivate: post.isPrivate,
           location: post.location,
-          date: post.date.toLocaleDateString(),
+          date: post.date,
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments.map((comment) => {
             return {
               username: comment.username,
-              date: comment.date.toLocaleDateString(),
+              date: comment.date,
               text: comment.text,
             };
           }),
