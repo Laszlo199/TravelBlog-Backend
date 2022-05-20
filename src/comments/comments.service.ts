@@ -48,7 +48,7 @@ export class CommentsService {
         eventInvokerName: profile.username,
         notificationType: "comment",
         date: createCommentDto.date,
-        text: createCommentDto.text /* later we can make that text shorter */
+        text: createCommentDto.text
       });
 
       await post.save();

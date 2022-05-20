@@ -13,10 +13,8 @@ export class NotificationsGateway {
 
   @SubscribeMessage('createNotification')
   async create(@MessageBody() createNotificationDto: CreateNotificationDto) {
-    console.log("user id in backend: " + createNotificationDto.userId);
     createNotificationDto.userName = await this.userService.getUsernameById(createNotificationDto.userId);
-    console.log("username: "+ createNotificationDto.userName);
-    this.server.emit(createNotificationDto.userId, createNotificationDto); //later go back to createNot.userId
+    this.server.emit(createNotificationDto.userId, createNotificationDto);
   }
 
 }
