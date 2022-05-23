@@ -1,4 +1,4 @@
-import { Comment } from "../../comments/entities/comment.entity";
+import { Comment } from '../../comments/entities/comment.entity';
 
 export class Post {
   id: string;

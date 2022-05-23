@@ -69,7 +69,7 @@ export class PostsService {
           isPrivate: post.isPrivate,
           location: post.location,
           date: post.date.toLocaleDateString(),
-          photo: post.photo,
+          photo: post.photo ? Buffer.from(post.photo).toString('base64') : null,
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments.map((comment) => {
@@ -105,7 +105,7 @@ export class PostsService {
           isPrivate: post.isPrivate,
           location: post.location,
           date: post.date.toLocaleDateString(),
-          photo: post.photo,
+          photo: post.photo ? Buffer.from(post.photo).toString('base64') : null,
           likes: post.likes.length,
           dislikes: post.dislikes.length,
           comments: post.comments.map((comment) => {
