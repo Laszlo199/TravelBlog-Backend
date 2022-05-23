@@ -60,26 +60,7 @@ export class PostsService {
       .exec();
     if (profile != null) {
       return profile.ownPosts.map((post) => {
-        return {
-          id: post.id,
-          username: profile.username,
-          title: post.title,
-          description: post.description,
-          text: post.text,
-          isPrivate: post.isPrivate,
-          location: post.location,
-          date: post.date.toLocaleDateString(),
-          photo: post.photo ? Buffer.from(post.photo).toString('base64') : null,
-          likes: post.likes.length,
-          dislikes: post.dislikes.length,
-          comments: post.comments.map((comment) => {
-            return {
-              username: comment.username,
-              date: comment.date.toLocaleDateString(),
-              text: comment.text,
-            };
-          }),
-        };
+        return this.postConverter(post, profile);
       });
     } else
       throw new HttpException(
@@ -96,26 +77,7 @@ export class PostsService {
       .exec();
     if (profile != null) {
       return profile.savedPosts.map((post) => {
-        return {
-          id: post.id,
-          username: profile.username,
-          title: post.title,
-          description: post.description,
-          text: post.text,
-          isPrivate: post.isPrivate,
-          location: post.location,
-          date: post.date.toLocaleDateString(),
-          photo: post.photo ? Buffer.from(post.photo).toString('base64') : null,
-          likes: post.likes.length,
-          dislikes: post.dislikes.length,
-          comments: post.comments.map((comment) => {
-            return {
-              username: comment.username,
-              date: comment.date.toLocaleDateString(),
-              text: comment.text,
-            };
-          }),
-        };
+        return this.postConverter(post, profile);
       });
     } else
       throw new HttpException(
@@ -130,11 +92,7 @@ export class PostsService {
       .findOne({ userId: likePostDto.userId })
       .exec();
 
-    const isAlreadySaved = await this.profileModel.find({
-      savedPosts: likePostDto.postId,
-    });
-
-    if (isAlreadySaved.length !== 0)
+    if (profile.savedPosts.some((post: Post) => post.id == likePostDto.postId))
       throw new HttpException(
         'User already likes this post',
         HttpStatus.CONFLICT,
@@ -149,15 +107,59 @@ export class PostsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  //returns one specific post
+  async findOne(id: string) {
+    const post = await this.postModel.findOne({ _id: id }).exec();
+    const profile = await this.profileModel.findOne({ ownPosts: id }).exec();
+
+    if (post != null && profile != null)
+      return this.postConverter(post, profile);
+    else
+      throw new HttpException(
+        'No profile or post found',
+        HttpStatus.BAD_REQUEST,
+      );
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string) {
+    const removeOwn = await this.profileModel
+      .updateOne({ ownPosts: id }, { $pull: { ownPosts: id } })
+      .exec();
+    const removeSaved = await this.profileModel
+      .updateMany({ savedPosts: id }, { $pull: { savedPosts: id } })
+      .exec();
+
+    if (removeOwn && removeSaved) {
+      const res = await this.postModel.remove({ _id: id });
+      return res.deletedCount == 1;
+    } else return false;
+  }
+
+  private postConverter(post: Post, profile: Profile) {
+    return {
+      id: post.id,
+      username: profile.username,
+      userId: profile.userId,
+      title: post.title,
+      description: post.description,
+      text: post.text,
+      isPrivate: post.isPrivate,
+      location: post.location,
+      date: post.date,
+      photo: post.photo ? Buffer.from(post.photo).toString('base64') : null,
+      likes: post.likes.length,
+      dislikes: post.dislikes.length,
+      comments: post.comments.map((comment) => {
+        return {
+          username: comment.username,
+          date: comment.date,
+          text: comment.text,
+        };
+      }),
+    };
   }
 }
