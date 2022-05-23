@@ -25,7 +25,7 @@ export class PostsController {
   @UseInterceptors(FileInterceptor('file'))
   @Post('file/:postId')
   async uploadFile(@Param('postId') postId: string, @UploadedFile() file: Express.Multer.File) {
-    return await this.postsService.addPhoto(file.buffer, postId);
+    return await this.postsService.addPhoto(file ? file.buffer : null, postId);
   }
 
   /**

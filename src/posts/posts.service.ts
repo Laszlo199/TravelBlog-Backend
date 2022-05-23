@@ -37,7 +37,7 @@ export class PostsService {
       profile.ownPosts.push(newPost);
       await profile.save();
 
-      return newPost;
+      return newPost._id;
     } else
       throw new HttpException(
         'No profile found with that user id',
@@ -46,10 +46,12 @@ export class PostsService {
   }
 
   async addPhoto(file: Buffer, postId: string) {
-    return await this.postModel
+    await this.postModel
       .findOne({ _id: postId })
       .updateOne({ photo: file })
       .exec();
+    const post = await this.postModel.findOne({ _id: postId });
+    return post.id;
   }
 
   //returns all posts created by that user
