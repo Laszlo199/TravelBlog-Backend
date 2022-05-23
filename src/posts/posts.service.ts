@@ -84,11 +84,7 @@ export class PostsService {
       .findOne({ userId: likePostDto.userId })
       .exec();
 
-    const isAlreadySaved = await this.profileModel.find({
-      savedPosts: likePostDto.postId,
-    });
-
-    if (isAlreadySaved.length !== 0)
+    if (profile.savedPosts.some((post: Post) => post.id == likePostDto.postId))
       throw new HttpException(
         'User already likes this post',
         HttpStatus.CONFLICT,
