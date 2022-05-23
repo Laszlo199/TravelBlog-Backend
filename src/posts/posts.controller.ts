@@ -22,7 +22,6 @@ export class PostsController {
     return await this.postsService.create(createPostDto);
   }
 
-
   @UseInterceptors(FileInterceptor('file'))
   @Post('file/:postId')
   async uploadFile(@Param('postId') postId: string, @UploadedFile() file: Express.Multer.File) {
@@ -48,12 +47,39 @@ export class PostsController {
   }
 
   /**
-   * performs an action of user liking the post
+   * performs an action of user adding the post to favourites
    * @param likePostDto
    */
   @Post('like')
+  async savePost(@Body() likePostDto: LikePostDto) {
+    return await this.postsService.favourite(likePostDto);
+  }
+
+  /**
+   * performs an action of giving a thumb up
+   * @param likePostDto
+   */
+  @Post('up')
   async likePost(@Body() likePostDto: LikePostDto) {
     return await this.postsService.like(likePostDto);
+  }
+
+  /**
+   * performs an action of giving a thumb down
+   * @param likePostDto
+   */
+  @Post('down')
+  async dislikePost(@Body() likePostDto: LikePostDto) {
+    return await this.postsService.dislike(likePostDto);
+  }
+
+  /**
+   * checks if the post is already saved by the user
+   * @param likePostDto
+   */
+  @Post('isfavourite')
+  async isFavourite(@Body() likePostDto: LikePostDto) {
+    return await this.postsService.checkFavourite(likePostDto);
   }
 
   @Get(':id')

@@ -87,23 +87,68 @@ export class PostsService {
   }
 
   //adds a post reference to user's saved posts list
-  async like(likePostDto: LikePostDto) {
+  async favourite(likePostDto: LikePostDto) {
     const profile = await this.profileModel
       .findOne({ userId: likePostDto.userId })
       .exec();
-
-    if (profile.savedPosts.some((post: Post) => post.id == likePostDto.postId))
-      throw new HttpException(
-        'User already likes this post',
-        HttpStatus.CONFLICT,
-      );
-    else {
-      const post = await this.postModel
-        .findOne({ _id: likePostDto.postId })
+    const post = await this.postModel
+      .findOne({ _id: likePostDto.postId })
+      .exec();
+    if (profile.savedPosts.includes(post.id)) {
+      await this.profileModel
+        .updateOne(
+          { userId: likePostDto.userId },
+          { $pull: { savedPosts: likePostDto.postId } },
+        )
         .exec();
-
+      return true;
+    } else {
       profile.savedPosts.push(post);
       await profile.save();
+      return true;
+    }
+  }
+
+  async like(likePostDto: LikePostDto) {
+    return await this.thumbAction(likePostDto, true);
+  }
+
+  async dislike(likePostDto: LikePostDto) {
+    return await this.thumbAction(likePostDto, false);
+  }
+
+  private async thumbAction(dto: LikePostDto, isThumbUp: boolean) {
+    const post = await this.postModel
+      .findOne({ _id: dto.postId })
+      .populate('likes')
+      .populate('dislikes')
+      .exec();
+    const profile = await this.profileModel
+      .findOne({ userId: dto.userId })
+      .exec();
+
+    if (isThumbUp) {
+      if (post.likes.includes(profile.id)) {
+        await this.postModel
+          .updateOne({ _id: dto.postId }, { $pull: { likes: profile.id } })
+          .exec();
+        return true;
+      } else {
+        post.likes.push(profile);
+        await post.save();
+        return true;
+      }
+    } else {
+      if (post.likes.includes(profile.id)) {
+        await this.postModel
+          .updateOne({ _id: dto.postId }, { $pull: { likes: profile.id } })
+          .exec();
+        return true;
+      } else {
+        post.dislikes.push(profile);
+        await post.save();
+        return true;
+      }
     }
   }
 
@@ -161,5 +206,13 @@ export class PostsService {
         };
       }),
     };
+  }
+
+  async checkFavourite(likePostDto: LikePostDto) {
+    const check = await this.profileModel
+      .findOne({ userId: likePostDto.userId, savedPosts: likePostDto.postId })
+      .exec();
+    if(check==null) return false;
+    return true;
   }
 }
