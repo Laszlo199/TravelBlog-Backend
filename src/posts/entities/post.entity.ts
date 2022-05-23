@@ -1,4 +1,4 @@
-import { Comment } from "../../comments/entities/comment.entity";
+import { Comment } from '../../comments/entities/comment.entity';
 
 export class Post {
   id: string;
@@ -9,6 +9,7 @@ export class Post {
   isPrivate: boolean;
   location: string;
   date: Date;
+  photo: Buffer;
   likes: string[];
   dislikes: string[];
   comments: Comment[];
