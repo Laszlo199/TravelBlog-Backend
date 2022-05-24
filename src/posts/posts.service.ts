@@ -23,7 +23,6 @@ export class PostsService {
         profile: profile,
         title: createPostDto.title,
         description: createPostDto.description,
-        userId: createPostDto.userId,
         text: createPostDto.text,
         isPrivate: createPostDto.isPrivate,
         location: createPostDto.location,
@@ -129,6 +128,7 @@ export class PostsService {
   private postConverter(post: Post, profile: Profile) {
     return {
       id: post.id,
+      userId: profile.userId,
       username: profile.username,
       title: post.title,
       description: post.description,

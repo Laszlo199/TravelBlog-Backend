@@ -27,14 +27,15 @@ export class CommentsService {
       .findOne({ _id: createCommentDto.postId })
       .exec();
 
-    var  a =  post.username;
-    const postOwner = await this.profileModel.findOne({a}).exec();
+    //var  a =  post.username;
+    const postOwner = await this.profileModel.findOne({ownPosts: post}).exec();
 
     const profile = await this.profileModel
       .findOne({ userId: createCommentDto.userId })
       .exec();
 
-    if (post != null && profile != null ) {
+    if (post != null && profile != null
+            && postOwner!=null ) {
       post.comments.push({
         profile: profile.id,
         username: profile.username,
