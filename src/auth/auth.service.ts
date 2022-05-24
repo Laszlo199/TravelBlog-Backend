@@ -66,7 +66,9 @@ export class AuthService {
     return this.userService._getUserDetails(user);
   }
   // We return the token if the user valid !
-  async login(existingUser: LoginDto): Promise<{ token: string }> {
+  async login(
+    existingUser: LoginDto,
+  ): Promise<{ user: string; token: string }> {
     const { userName, password } = existingUser;
     const user = await this.validateUser(userName, password);
 
@@ -77,8 +79,9 @@ export class AuthService {
     //maybe delete
     // Im not sure we need this with the token
     //const userInformation = await this.userService.findById(user.id);
+    const userId = user.id;
 
-    return { token: jwt };
+    return { token: jwt, user: userId };
   }
   // maybe I can use in the frontend...
   async verifyJwt(jwt: string): Promise<{ exp: number }> {
