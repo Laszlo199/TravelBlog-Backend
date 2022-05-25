@@ -139,6 +139,24 @@ export class PostsService {
     } else return false;
   }
 
+  async search(keyword: string, location: string) {
+    if(location==null) location = '';
+    if(keyword==null) keyword = '';
+    const regexK = new RegExp(keyword, 'i') // i for case insensitive
+    const regexL = new RegExp(location, 'i')
+    const results = await this.postModel
+      .find({$and:
+          [{location: {$regex: regexL}},
+            {isPrivate: false},
+            {$or: [{title: {$regex: regexK}}, {description: {$regex: regexK}}, {text: {$regex: regexK}} ]}] })
+      .populate('profile')
+      .exec();
+
+    return results.map((post) => {
+      return this.postConverter(post, post.profile);
+    });
+  }
+
   private postConverter(post: Post, profile: Profile) {
     return {
       id: post.id,
