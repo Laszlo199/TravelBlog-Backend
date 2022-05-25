@@ -142,8 +142,8 @@ export class PostsService {
   private postConverter(post: Post, profile: Profile) {
     return {
       id: post.id,
-      username: profile.username,
       userId: profile.userId,
+      username: profile.username,
       title: post.title,
       description: post.description,
       text: post.text,
