@@ -96,14 +96,15 @@ export class PostsService {
     const post = await this.postModel
       .findOne({ _id: likePostDto.postId })
       .exec();
-    if (profile.savedPosts.includes(post.id)) {
+
+    if (await this.profileModel.findOne({userId: likePostDto.userId, savedPosts: likePostDto.postId})) {
       await this.profileModel
         .updateOne(
           { userId: likePostDto.userId },
           { $pull: { savedPosts: likePostDto.postId } },
         )
         .exec();
-      return true;
+      return false;
     } else {
       profile.savedPosts.push(post);
       await profile.save();
@@ -130,7 +131,7 @@ export class PostsService {
       .exec();
 
     if (isThumbUp) {
-      if (post.likes.includes(profile.id)) {
+      if (post.likes.some((p) => p.userId == profile.userId)) {
         await this.postModel
           .updateOne({ _id: dto.postId }, { $pull: { likes: profile.id } })
           .exec();
@@ -141,9 +142,9 @@ export class PostsService {
         return true;
       }
     } else {
-      if (post.likes.includes(profile.id)) {
+      if (post.dislikes.some((p) => p.userId == profile.userId)) {
         await this.postModel
-          .updateOne({ _id: dto.postId }, { $pull: { likes: profile.id } })
+          .updateOne({ _id: dto.postId }, { $pull: { dislikes: profile.id } })
           .exec();
         return true;
       } else {
