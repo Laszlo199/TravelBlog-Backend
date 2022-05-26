@@ -49,7 +49,7 @@ describe("PostService", () => {
   });
 
   describe("create", () => {
-    it("should return the saved post", async () => {
+    it("should return the saved post id", async () => {
       const dto = new CreatePostDto();
       const userId = 'abc123'
       const profile = new Profile();
@@ -59,8 +59,8 @@ describe("PostService", () => {
       dto.title = 'the title';
       dto.userId = userId;
 
-      const createdPost = await postService.create(dto);
-      expect(createdPost.title).toBe(dto.title);
+      const createdPostId = await postService.create(dto);
+      expect(createdPostId).not.toBe(null);
     });
     it("should throw exception", async () => {
       const dto = new CreatePostDto();
