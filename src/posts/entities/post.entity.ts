@@ -12,7 +12,7 @@ export class Post {
   location: string;
   date: Date;
   photo: Buffer;
-  likes: string[];
-  dislikes: string[];
+  likes: Profile[];
+  dislikes: Profile[];
   comments: Comment[];
 }
