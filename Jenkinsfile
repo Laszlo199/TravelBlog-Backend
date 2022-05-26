@@ -65,37 +65,37 @@ pipeline{
                 }
               }
 
-             stage("Deploy") {
-                       steps{
-                           sh "docker-compose --env-file config/Test.env up -d"
-                       }
-                        post{
-                            always {
-                                sh "echo 'deploying frontend finished'"
-                            }
-                            success {
-                                sh "echo 'deploying frontend succeeded'"
-                            }
-                            failure {
-                                sh "echo 'deploying frontend failed'"
-                            }
-                     }
-             }
-             stage("Push to registry") {
-                steps {
-                    sh "docker-compose --env-file config/Test.env push"
+        stage("Deploy") {
+            steps{
+                sh "docker-compose --env-file config/Test.env up -d"
+            }
+            post {
+                always {
+                    sh "echo 'deploying frontend finished'"
                 }
-                post{
-                    always {
-                        sh "echo 'Pushing to registry finished'"
-                    }
-                    success {
-                        sh "echo 'Pushing to registry succeeded'"
-                    }
-                    failure {
-                        sh "echo 'Pushing to registry failed'"
-                    }
+                success {
+                    sh "echo 'deploying frontend succeeded'"
                 }
-          }
+                failure {
+                    sh "echo 'deploying frontend failed'"
+                }
+            }
+        }
+        stage("Push to registry") {
+            steps {
+                sh "docker-compose --env-file config/Test.env push"
+            }
+            post {
+                always {
+                    sh "echo 'Pushing to registry finished'"
+                }
+                success {
+                    sh "echo 'Pushing to registry succeeded'"
+                }
+                failure {
+                    sh "echo 'Pushing to registry failed'"
+                }
+            }
+        }
     }
 }
