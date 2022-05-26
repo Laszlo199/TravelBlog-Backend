@@ -17,17 +17,6 @@ import { FileInterceptor } from "@nestjs/platform-express";
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post()
-  async create(@Body() createPostDto: CreatePostDto) {
-    return await this.postsService.create(createPostDto);
-  }
-
-  @UseInterceptors(FileInterceptor('file'))
-  @Post('file/:postId')
-  async uploadFile(@Param('postId') postId: string, @UploadedFile() file: Express.Multer.File) {
-    return await this.postsService.addPhoto(file ? file.buffer : null, postId);
-  }
-
   /**
    * returns a list of all posts created by the user
    * @param id
@@ -44,6 +33,28 @@ export class PostsController {
   @Get('liked/userId/:id')
   async findAllSaved(@Param('id') id: string) {
     return await this.postsService.findAllSaved(id);
+  }
+
+  @Get('getOne/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.postsService.findOne(id);
+  }
+
+  @Get('search')
+  async search(@Query('keyword') keyword: string,
+               @Query('location') location: string) {
+    return await this.postsService.search(keyword, location);
+  }
+
+  @Post()
+  async create(@Body() createPostDto: CreatePostDto) {
+    return await this.postsService.create(createPostDto);
+  }
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('file/:postId')
+  async uploadFile(@Param('postId') postId: string, @UploadedFile() file: Express.Multer.File) {
+    return await this.postsService.addPhoto(file ? file.buffer : null, postId);
   }
 
   /**
@@ -80,17 +91,6 @@ export class PostsController {
   @Post('isfavourite')
   async isFavourite(@Body() likePostDto: LikePostDto) {
     return await this.postsService.checkFavourite(likePostDto);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(id);
-  }
-  
-  @Get('search')
-  async search(@Query('keyword') keyword: string,
-               @Query('location') location: string) {
-    return await this.postsService.search(keyword, location);
   }
 
   @Patch(':id')
