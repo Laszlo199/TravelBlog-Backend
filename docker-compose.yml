@@ -4,6 +4,14 @@ services:
   api:
     build:
       context: .
+    image: "localhost:7002/travelBlog_api:${IMAGE_TAG}"
     container_name: "${CONT_NAME}"
     ports:
       - "${API_PORT}:80"
+      
+  db:
+    image: mongo:4.4.6
+    container_name: "${DB_CONT_NAME}"
+    ports:
+      - "${DB_PORT}:27017"
+    restart: always
