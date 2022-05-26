@@ -1,4 +1,5 @@
 import { Comment } from '../../comments/entities/comment.entity';
+import { Profile } from "../../profiles/entities/profile.entity";
 
 export class Post {
   id: string;
@@ -10,7 +11,7 @@ export class Post {
   location: string;
   date: Date;
   photo: Buffer;
-  likes: string[];
-  dislikes: string[];
+  likes: Profile[];
+  dislikes: Profile[];
   comments: Comment[];
 }
