@@ -7,6 +7,11 @@ pipeline{
         nodejs "18.1.0"
     }
     stages{
+        stage("Startup") {
+            dir("backend-travel-blog") {
+                  sh "rm -rf coverage"
+               }
+        }
         stage("Build backend"){
             steps{
                 echo "Building backend"
@@ -31,8 +36,20 @@ pipeline{
             steps{
                 echo "Testing backend"
                 dir("backend-travel-blog") {
-                  sh "npm run test"
+                  sh "jest --coverage"
                }
+            }
+            post {
+                always {
+                    echo "Testing finished"
+                }
+                failure {
+                    echo "Testing failed"
+                }
+                success {
+                    echo "Testing succeeded, collecting artifact"
+                    archiveArtifacts "backend-travel-blog/coverage/clover.xml"
+                }
             }
         }
     }
