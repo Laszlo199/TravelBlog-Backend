@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete, UseInterceptors, UploadedFile
+  Delete, UseInterceptors, UploadedFile, Query
 } from "@nestjs/common";
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -63,7 +63,7 @@ export class PostsController {
   async likePost(@Body() likePostDto: LikePostDto) {
     return await this.postsService.like(likePostDto);
   }
-
+  
   /**
    * performs an action of giving a thumb down
    * @param likePostDto
@@ -85,6 +85,12 @@ export class PostsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);
+  }
+  
+  @Get('search')
+  async search(@Query('keyword') keyword: string,
+               @Query('location') location: string) {
+    return await this.postsService.search(keyword, location);
   }
 
   @Patch(':id')
