@@ -8,9 +8,11 @@ pipeline{
     }
     stages{
         stage("Startup") {
-            dir("backend-travel-blog") {
+            steps {
+                dir("backend-travel-blog") {
                   sh "rm -rf coverage"
                }
+            }
         }
         stage("Build backend"){
             steps{
