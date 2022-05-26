@@ -38,7 +38,7 @@ pipeline{
             steps{
                 echo "Testing backend"
                 dir("backend-travel-blog") {
-                  sh "jest --coverage"
+                  sh "npm test -- --coverage"
                }
             }
             post {
