@@ -50,7 +50,7 @@ pipeline{
                 }
                 success {
                     echo "Testing succeeded, collecting artifact"
-                    archiveArtifacts "backend-travel-blog/coverage/clover.xml"
+                    archiveArtifacts "coverage/clover.xml"
                 }
             }
         }
