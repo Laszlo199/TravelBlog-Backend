@@ -1,0 +1,10 @@
+version: "3.3"
+
+services:
+  web:
+    build:
+      context: .
+    image: "localhost:7002/travelblog_web:${IMAGE_TAG}"
+    container_name: "${CONT_NAME}"
+    ports:
+      - "${API_PORT}:3001"
