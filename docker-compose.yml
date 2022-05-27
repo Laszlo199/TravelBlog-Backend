@@ -7,7 +7,7 @@ services:
     image: "localhost:7002/travelblog_api:${IMAGE_TAG}"
     container_name: "${CONT_NAME}"
     ports:
-      - "${API_PORT}:80"
+      - "${API_PORT}:7002"
 
   db:
     image: mongo:4.4.6
