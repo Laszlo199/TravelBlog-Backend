@@ -81,6 +81,7 @@ pipeline{
                 }
             }
         }
+
         stage("Push to registry") {
             steps {
                 sh "docker-compose --env-file config/Test.env push"
@@ -97,5 +98,11 @@ pipeline{
                 }
             }
         }
+        stage("Deploy to production") {
+                    steps {
+                        sh "docker-compose --env-file config/Prod.env pull"
+                        sh "docker-compose --env-file config/Prod.env up -d"
+                    }
+                }
     }
 }
