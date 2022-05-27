@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+//import * as bcrypt from 'bcryptjs';
 import { UserService } from '../user/user.service';
 import { RegisterDto } from '../user/dto/registerDto';
 import { UserDetails } from '../user/user.datails.interface';
@@ -8,6 +8,8 @@ import { LoginDto } from '../user/dto/loginDto';
 
 @Injectable()
 export class AuthService {
+  bcrypt = require('bcryptjs');
+
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -15,7 +17,7 @@ export class AuthService {
 
   // just a basic has+salt the password method.
   private async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 12);
+    return this.bcrypt.hash(password, 12);
   }
   // We check the userNames and if we already have the same then we don't allow the user to register.
   // Here we use the hashPassword method if the given email does not exist then we hash the password end create a user.
@@ -39,7 +41,7 @@ export class AuthService {
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    return bcrypt.compare(password, hashedPassword);
+    return this.bcrypt.compare(password, hashedPassword);
   }
   // we need this method in the login method
   /*
